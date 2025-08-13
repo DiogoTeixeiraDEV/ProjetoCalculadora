@@ -84,6 +84,8 @@ button {
     font-weight: 400;
     font-size: 40px;
     cursor: pointer;
+
+    transition: background-color 0.2s ease;
 }
 
 /* Botão 0 ocupa 2 colunas */
@@ -106,4 +108,10 @@ button.specialOp {
     font-size: 34px;
 }
 
+
+button:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+    transition: 300ms
+}
 
