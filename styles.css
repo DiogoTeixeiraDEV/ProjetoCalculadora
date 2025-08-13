@@ -15,7 +15,8 @@
     top: 15.64px;
     left: 19px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    padding-top: 10px;
 
 }
 
@@ -32,7 +33,9 @@
     line-height: 20px;
     letter-spacing: 0px;
     text-align: center;
+    display: flex;
     justify-content: flex-start;
+    
 
 }
 
@@ -57,8 +60,9 @@
     font-weight: 300;
     font-size: 90px;
     text-align: right;
-    padding: 20px;
+    padding: 5px;
     box-sizing: border-box;
+    border: 0px;
 }
 
 .buttons {
@@ -86,6 +90,8 @@ button {
 button.zero {
     grid-column: span 2;
     border-radius: 350px;
+    text-align: left;
+    padding-left: 30px;
 }
 
 /* Botões operadores */
