@@ -82,14 +82,23 @@ body {
 .buttons {  
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 88px;
+    grid-auto-rows: 75px;
     gap: 12px;
     justify-content: center;
     margin-top: 20px;
 }
 
+
+.scientific-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 40px;
+    gap: 10px;
+    margin-top: 10px;
+}
+
 /* Botão padrão */
-button {
+.buttons button {
     background: #333;
     color: #fff;
     border: none;
@@ -100,6 +109,18 @@ button {
     cursor: pointer;
 
     transition: background-color 0.2s ease;
+}
+
+.scientific-buttons button {
+    background: #333;
+    font-size: 24px;
+    border-radius: 20px;
+    color: #fff;
+    font-family: 'SF Pro', sans-serif;
+    font-weight: 300;
+    cursor: pointer;
+    border: none;
+    
 }
 
 /* Botão 0 ocupa 2 colunas */

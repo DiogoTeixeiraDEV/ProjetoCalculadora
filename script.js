@@ -1,11 +1,24 @@
 const display = document.getElementById("display");
 const buttons = document.querySelectorAll("button");
-const acButton = document.querySelector("button");
+const acButton = document.querySelector(".specialOp");
 
 let expression = ""
 
-// função para mudar o botão de AC para apagar, que nem o iphone faz
-function updateACButton() {
+
+function atualizarRelogio() {  // função para mostrar o horário atual
+  const time = new Date();
+  const hour = String(time.getHours()).padStart(2, '0');
+  const min = String(time.getMinutes()).padStart(2, '0');
+  const fixedTime = `${hour}:${min}`;
+
+  document.getElementById('time').textContent = fixedTime;
+}
+
+setInterval(atualizarRelogio, 1000); // dá update no horário cada 1000 ms
+atualizarRelogio();
+
+
+function updateACButton() {  // função para mudar o botão de AC para apagar, que nem o iphone faz
   if (expression.length > 0 && expression.length < 10) {
     acButton.textContent = "⌫"; // Botão de apagar
   } else {
@@ -34,16 +47,36 @@ function changeSignal (){  //muda o sinal da equação
     display.value = expression;
 }
 
+function roundResult(num){
+  return Number(num.toFixed(6)); // arredonda para 6 casas decimais.
+}
+
+
 function calculate (){  //arruma a equação para conseguir ser lida e dá o eval
   try{
-    const fixedExpression = expression
-    .replaceAll('×', '*')
-    .replaceAll('÷', '/')
-    .replaceAll('%', '/100')
+    function toRadians (num){
+      return num * Math.PI /180
+    }
+    const fixedExpression = expression   // dá replace em tudo que precisa e uma a Math para transformar o display em algo que possa ser calculado
+    .replace('×', '*')
+    .replace('÷', '/')
+    .replace('%', '/100')
+    .replace(/sin([0-9.]+)/gi, (_, num) => `Math.sin(${toRadians(num)})`)
+    .replace(/cos([0-9.]+)/gi, (_, num) => `Math.cos(${toRadians(num)})`)
+    .replace(/tan([0-9.]+)/gi, (_, num) => `Math.tan(${toRadians(num)})`)
+    .replace(/log([0-9.]+)/gi, (_, num) => `Math.log10(${num})`)
+    .replace(/ln([0-9.]+)/gi, (_, num) => `Math.log(${num})`)
+    .replace(/√([0-9.]+)/gi, (_, num) => `Math.sqrt(${num})`)
+    .replace(/([0-9.]+)²/gi, (_, num) => `Math.pow(${num}, 2)`)
+    .replace(/([0-9.]+)²/gi, (_, num) => `Math.pow(${num}, 2)`)
+    .replace(/e\^([0-9.]+)/gi, (_, num) => `Math.pow(Math.E, ${num})`)
+    .replace(/π/gi, "Math.PI");
     
    const result = eval(fixedExpression);
-   display.value = result;
-   expression = result.toString();
+   const finalResult = roundResult(result) // arredonda o result
+   display.value = finalResult;
+   expression = finalResult.toString();
+
   }
 
   catch  {
@@ -70,6 +103,17 @@ buttons.forEach(button => {
         else if (value === "+/-") {
 
             changeSignal()
+        }
+
+        else if (value === "x²"){
+
+          addNumToEquation("²")
+        }
+
+
+        else if (value === "eˣ"){
+
+          addNumToEquation("e^")
         }
 
         else if (value === "=") {
