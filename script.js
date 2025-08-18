@@ -13,61 +13,88 @@ function updateACButton() {
   }
 }
 
-function updateFontSize(px){
+function updateFontSize(px){  // atualiza o fontsize no display
     display.style.fontSize = px + "px";
 }
 
+function clearDisplay (value) {  //limpa ou apaga 1 digito do display
+  if (value === "AC") {
+      expression = "";
+      display.value = "";
+  }
+  else {
+      expression = expression.slice(0, -1);
+      display.value = expression || "0";
+  }
+  
+}
+
+function changeSignal (){  //muda o sinal da equação
+    expression *= -1;
+    display.value = expression;
+}
+
+function calculate (){  //arruma a equação para conseguir ser lida e dá o eval
+  try{
+    const fixedExpression = expression
+    .replaceAll('×', '*')
+    .replaceAll('÷', '/')
+    .replaceAll('%', '/100')
+    
+   const result = eval(fixedExpression);
+   display.value = result;
+   expression = result.toString();
+  }
+
+  catch  {
+    display.value = "Erro";
+    expression = ""
+  }
+}
+
+function addNumToEquation (value){ // adiciona numeros a equação
+    expression += value;
+    display.value = expression;
+}
 
 // adiciona eventos para todos os buttons
 buttons.forEach(button => {
     button.addEventListener("click", ()=>{
         const value = button.textContent;
         
-        if (value === "AC" || value === "⌫"){ //condicional de apagar e limpar a expression
-            if (value === "AC") {
-                expression = "";
-                display.value = "";
-            }
-            else {
-                expression = expression.slice(0, -1);
-                display.value = expression || "0";
-            }
+        if (value === "AC" || value === "⌫"){ 
+        
+            clearDisplay(value)
         }
 
         else if (value === "+/-") {
-          expression *= -1;
-          display.value = expression;
+
+            changeSignal()
         }
 
         else if (value === "=") {
-          try{
-            const fixedExpression = expression
-            .replaceAll('×', '*')
-            .replaceAll('÷', '/')
-            .replaceAll('%', '/100')
-            
-           const result = eval(fixedExpression);
-           display.value = result;
-           expression = result.toString();
-          }
 
-          catch  {
-            display.value = "Erro";
-            expression = ""
-          }
+            calculate();
         }
 
         else { // adiciona números
-            expression += value;
-            display.value = expression;
+
+            addNumToEquation(value);
         }
 
-        updateACButton();// implementa a função de dar update no botão de apagar por último
+        updateACButton();// implementa a função de dar update no botão de apagar 
+      
+        
         if (expression.length > 8){
           updateFontSize(45);
         }
         else {
           updateFontSize(90); 
+        }
+
+        if (expression.length > 14) {
+          
+          display.value = expression.slice(0, 14);
         }
     })
 });
