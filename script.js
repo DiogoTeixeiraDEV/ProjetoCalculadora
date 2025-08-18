@@ -61,7 +61,9 @@
       const fixedExpression = expression   // dá replace em tudo que precisa e uma a Math para transformar o display em algo que possa ser calculado
       .replace('×', '*')
       .replace('÷', '/')
-      .replace(/(\d+)%/g, (_, num) => `(${Number(num)}/100)`)
+      .replace(/(\d+)%/g, (_, perc) => {
+        return (Number(perc) / 100).toString();
+      })
       .replace(/(\d+)([\+\-\*\/])(\d+)%/g, (_, num1, operador, num2) => {  // trata a porcentagem para casos tipo 10 + 10%
         const base = Number(num1);
         const perc = Number(num2);
