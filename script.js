@@ -1,7 +1,7 @@
   const display = document.getElementById("display");
   const buttons = document.querySelectorAll("button");
   const acButton = document.querySelector(".specialOp");
-
+ 
   let expression = ""
 
   const buttonValuesMap = {
@@ -26,7 +26,7 @@
   atualizarRelogio();
 
   function updateACButton() {  // função para mudar o botão de AC para apagar, que nem o iphone faz
-    if (expression.length > 0 && expression.length < 10) {
+    if (expression.length > 5 && expression.length < 10) {
       acButton.textContent = "⌫"; // Botão de apagar
     } 
     
@@ -49,7 +49,6 @@
         expression = expression.slice(0, -1);
         display.value = expression || "0";
     }
-    
   }
 
   function changeSignal (){  //muda o sinal da equação
@@ -80,7 +79,7 @@
       function toRadians (num){
         return num * Math.PI /180
       }
-      
+
       const fixedExpression = expression   // dá replace em tudo que precisa e uma a Math para transformar o display em algo que possa ser calculado
       .replace('×', '*')
       .replace('÷', '/')
@@ -94,7 +93,7 @@
         const decimal = (Number(perc) / 100)
         return decimal
       })
-      .replace(/π/gi, "Math.PI")
+      .replace(/π/gi, "Math.PI")  // os regex tratam os casos de operadores de calculadora científica
       .replace(/sin([0-9.]+)/gi, (_, num) => `Math.sin(${toRadians(num)})`)
       .replace(/cos([0-9.]+)/gi, (_, num) => `Math.cos(${toRadians(num)})`)
       .replace(/tan([0-9.]+)/gi, (_, num) => `Math.tan(${toRadians(num)})`)
@@ -110,7 +109,6 @@
     const finalResult = roundResult(result) // arredonda o result
     display.value = finalResult;
     expression = finalResult.toString();
-
     }
 
     catch  {
@@ -146,7 +144,7 @@
 
           else { // adiciona números  
   
-            const addAllValues = buttonValuesMap[value] || value
+            const addAllValues = buttonValuesMap[value] || value // pega todos operadores, inclusive os que foram mudados no display value
 
               if (operators.includes(addAllValues)){
 
