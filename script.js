@@ -4,6 +4,14 @@
 
   let expression = ""
 
+  const buttonValuesMap = {
+    "x²": "²",
+    "eˣ": "e^"
+  };
+
+  const operators = 
+    ["+",  "÷", "×", "√", ".", "!", "cos", 
+    "tan", "sin", "ln", "e^", "log", "²", "-"];
 
   function atualizarRelogio() {  // função para mostrar o horário atual
     const time = new Date();
@@ -17,11 +25,12 @@
   setInterval(atualizarRelogio, 1000); // dá update no horário cada 1000 ms
   atualizarRelogio();
 
-
   function updateACButton() {  // função para mudar o botão de AC para apagar, que nem o iphone faz
     if (expression.length > 0 && expression.length < 10) {
       acButton.textContent = "⌫"; // Botão de apagar
-    } else {
+    } 
+    
+    else {
       acButton.textContent = "AC"; // Botão de limpar tudo
     }
   }
@@ -35,6 +44,7 @@
         expression = "";
         display.value = "";
     }
+
     else {
         expression = expression.slice(0, -1);
         display.value = expression || "0";
@@ -51,25 +61,40 @@
     return Number(num.toFixed(6)); // arredonda para 6 casas decimais.
   }
 
+  function factorial (num) { // função para numero fatorial
+    if (num < 0)  return undefined;
 
+    if (num === 1 || num === 0) return 1;
+
+    let result = 1
+    for (let i = 2; i <= num ; i ++) {
+      result *= i;
+    }
+    return result
+  }
 
   function calculate (){  //arruma a equação para conseguir ser lida e dá o eval
+    
     try{
+
       function toRadians (num){
         return num * Math.PI /180
       }
+      
       const fixedExpression = expression   // dá replace em tudo que precisa e uma a Math para transformar o display em algo que possa ser calculado
       .replace('×', '*')
       .replace('÷', '/')
-      .replace(/(\d+)%/g, (_, perc) => {
-        return (Number(perc) / 100).toString();
-      })
       .replace(/(\d+)([\+\-\*\/])(\d+)%/g, (_, num1, operador, num2) => {  // trata a porcentagem para casos tipo 10 + 10%
         const base = Number(num1);
         const perc = Number(num2);
         const valorPercentual = (base * perc) / 100;
         return `${num1}${operador}${valorPercentual}`;
       })
+      .replace(/(\d+)%/g, (_, perc) => {
+        const decimal = (Number(perc) / 100)
+        return decimal
+      })
+      .replace(/π/gi, "Math.PI")
       .replace(/sin([0-9.]+)/gi, (_, num) => `Math.sin(${toRadians(num)})`)
       .replace(/cos([0-9.]+)/gi, (_, num) => `Math.cos(${toRadians(num)})`)
       .replace(/tan([0-9.]+)/gi, (_, num) => `Math.tan(${toRadians(num)})`)
@@ -77,9 +102,9 @@
       .replace(/ln([0-9.]+)/gi, (_, num) => `Math.log(${num})`)
       .replace(/√([0-9.]+)/gi, (_, num) => `Math.sqrt(${num})`)
       .replace(/([0-9.]+)²/gi, (_, num) => `Math.pow(${num}, 2)`)
-      .replace(/([0-9.]+)²/gi, (_, num) => `Math.pow(${num}, 2)`)
       .replace(/e\^([0-9.]+)/gi, (_, num) => `Math.pow(Math.E, ${num})`)
-      .replace(/π/gi, "Math.PI");
+      .replace(/([0-9.]+)!/gi, (_, num) => `factorial(${num})`);
+      
       
     const result = eval(fixedExpression);
     const finalResult = roundResult(result) // arredonda o result
@@ -114,31 +139,29 @@
               changeSignal()
           }
 
-          else if (value === "x²"){
-
-            addNumToEquation("²")
-          }
-
-
-          else if (value === "eˣ"){
-
-            addNumToEquation("e^")
-          }
-
           else if (value === "=") {
 
               calculate();
           }
 
-          else { // adiciona números
+          else { // adiciona números  
+  
+            const addAllValues = buttonValuesMap[value] || value
 
-              addNumToEquation(value);
+              if (operators.includes(addAllValues)){
+
+                if (operators.some(op => expression.endsWith(op))){
+                  return
+                }
+              }
+
+            addNumToEquation(addAllValues);
           }
 
           updateACButton();// implementa a função de dar update no botão de apagar 
         
           
-          if (expression.length > 8){
+          if (expression.length > 8){ // muda o fontsize para caber mais numeros na tela
             updateFontSize(45);
           }
           else {
