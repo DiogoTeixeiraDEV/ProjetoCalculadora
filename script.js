@@ -6,12 +6,13 @@
 
   const buttonValuesMap = {
     "x²": "²",
-    "eˣ": "e^"
+    "eˣ": "e^",
+    "exp" : "^"
   };
 
   const operators = 
     ["+",  "÷", "×", "√", ".", "!", "cos", 
-    "tan", "sin", "ln", "e^", "log", "²", "-"];
+    "tan", "sin", "ln", "e^", "log", "²", "-"]; 
 
   function atualizarRelogio() {  // função para mostrar o horário atual
     const time = new Date();
@@ -80,20 +81,25 @@
         return num * Math.PI /180
       }
 
-      const fixedExpression = expression   // dá replace em tudo que precisa e uma a Math para transformar o display em algo que possa ser calculado
+      let fixedExpression = expression
+      .replace('^', '**')
       .replace('×', '*')
       .replace('÷', '/')
-      .replace(/(\d+)([\+\-\*\/])(\d+)%/g, (_, num1, operador, num2) => {  // trata a porcentagem para casos tipo 10 + 10%
+      .replace(/\be\b/g, "Math.E")
+     
+      fixedExpression = fixedExpression
+      .replace(/(\d+)([\+\-\*\/])(\d+)%/g, (_, num1, operador, num2) => {  // trata a porcentagem para    casos tipo 10 + 10%
         const base = Number(num1);
         const perc = Number(num2);
         const valorPercentual = (base * perc) / 100;
         return `${num1}${operador}${valorPercentual}`;
       })
-      .replace(/(\d+)%/g, (_, perc) => {
+      .replace(/(\d+)%/g, (_, perc) => { // trata a porcentagem isolada
         const decimal = (Number(perc) / 100)
         return decimal
       })
-      .replace(/π/gi, "Math.PI")  // os regex tratam os casos de operadores de calculadora científica
+      fixedExpression = fixedExpression
+        // os regex tratam os casos de operadores de calculadora científica
       .replace(/sin([0-9.]+)/gi, (_, num) => `Math.sin(${toRadians(num)})`)
       .replace(/cos([0-9.]+)/gi, (_, num) => `Math.cos(${toRadians(num)})`)
       .replace(/tan([0-9.]+)/gi, (_, num) => `Math.tan(${toRadians(num)})`)
@@ -163,7 +169,7 @@
             updateFontSize(45);
           }
           else {
-            updateFontSize(90); 
+            updateFontSize(85); 
           }
 
           if (expression.length > 14) {
