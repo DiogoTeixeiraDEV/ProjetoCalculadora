@@ -11,7 +11,7 @@
   };
 
   const operators = 
-    ["+",  "÷", "×", "√", ".", "!", "cos", 
+    ["+",  "÷", "×", "√", ".", "!", "cos", "^", 
     "tan", "sin", "ln", "e^", "log", "²", "-"]; 
 
   function atualizarRelogio() {  // função para mostrar o horário atual
