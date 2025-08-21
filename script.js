@@ -11,10 +11,9 @@
   };
 
   const arithmeticOperators = ["+", "÷", "×", ".", "^", "-"];
-  const functions = ["cos", "sin", "tan", "ln", "log", "√", "e^"];
-  const specialOperators = ["!", "²"]; 
-
-  const operators = [...arithmeticOperators, ...functions, ...specialOperators];
+  const functions = ["cos", "sin", "tan", "ln", "log", "√", "e^", "²", "!", "²"];
+  
+  const operators = [...arithmeticOperators, ...functions];
 
   function atualizarRelogio() {  // função para mostrar o horário atual
     const time = new Date();
@@ -158,7 +157,18 @@
               if (arithmeticOperators.some(op => expression.endsWith(op))) {
                   return;
               }
-      }
+            }
+
+              // Bloqueia funções duplicadas (ex: coscos)
+              else if (functions.includes(addAllValues)) {
+                for (let func of functions) {
+                    if (expression.endsWith(func)) {
+                        return;
+                    }
+                }
+            }
+            
+      
 
       addNumToEquation(addAllValues);
     }
