@@ -10,9 +10,11 @@
     "exp" : "^"
   };
 
-  const operators = 
-    ["+",  "÷", "×", "√", ".", "!", "cos", "^", 
-    "tan", "sin", "ln", "e^", "log", "²", "-"]; 
+  const arithmeticOperators = ["+", "÷", "×", ".", "^", "-"];
+  const functions = ["cos", "sin", "tan", "ln", "log", "√", "e^"];
+  const specialOperators = ["!", "²"]; 
+
+  const operators = [...arithmeticOperators, ...functions, ...specialOperators];
 
   function atualizarRelogio() {  // função para mostrar o horário atual
     const time = new Date();
@@ -148,19 +150,18 @@
               calculate();
           }
 
-          else { // adiciona números  
-  
-            const addAllValues = buttonValuesMap[value] || value // pega todos operadores, inclusive os que foram mudados no display value
+          else {  
+              const addAllValues = buttonValuesMap[value] || value;
 
-              if (operators.includes(addAllValues)){
-
-                if (operators.some(op => expression.endsWith(op))){
-                  return
-                }
+      // 🔹 só bloqueia operadores aritméticos duplicados
+              if (arithmeticOperators.includes(addAllValues)) {
+              if (arithmeticOperators.some(op => expression.endsWith(op))) {
+                  return;
               }
+      }
 
-            addNumToEquation(addAllValues);
-          }
+      addNumToEquation(addAllValues);
+    }
 
           updateACButton();// implementa a função de dar update no botão de apagar 
         
